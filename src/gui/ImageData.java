@@ -13,7 +13,7 @@ public enum ImageData {
 	Empty(),
 	Hills("hill",1,1),
 	Gate("hill",1,1),
-	Link("player",4,2),
+	Player("player",4,2),
 	Dragon("water",1,1),
 	Key("water",1,1),
 	Trap("water",1,1),

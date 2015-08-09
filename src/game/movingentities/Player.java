@@ -23,7 +23,7 @@ public class Player extends MovingEntity{
 	private SkillSlots skills;
 	
 	public Player(int x, int y,int dir) {
-		super(ImageData.Link, dir, x, y,120.0,5, dir,true);
+		super(ImageData.Player, dir, x, y,120.0,5, dir,true);
 		this.dir=dir;
 		activeAbility=-1;
 		skills=new SkillSlots(4,abilities);
