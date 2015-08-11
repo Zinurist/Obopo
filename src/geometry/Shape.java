@@ -2,13 +2,16 @@ package geometry;
 
 import java.io.Serializable;
 
+/**
+ * 2D Shape
+ */
 public abstract class Shape implements Serializable{
 
 	private static final long serialVersionUID = 20L;
 
-	protected double[] offset;
-	protected double[] middle;
-	protected double radius;
+	protected double[] offset;//offset to get translated position in the world
+	protected double[] middle;//middle point
+	protected double radius;//radius
 	
 	public Shape(double[] offset, double[] middle, double radius){
 		this.offset=offset;
@@ -19,6 +22,8 @@ public abstract class Shape implements Serializable{
 	public Shape(){
 		this(new double[]{0,0},new double[]{0,0},0);
 	}
+	
+	//getter/setter
 	
 	public double getTranslatedMiddleX(){
 		return middle[0]+offset[0];

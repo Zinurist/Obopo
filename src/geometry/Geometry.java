@@ -2,7 +2,13 @@ package geometry;
 
 import java.util.List;
 
+/**
+ * Collection of useful functions for hitbox calculations.
+ */
 public class Geometry {
+	
+	//distance between points, (2d,2d) (p,2d) (p,p)
+	
 	public static double distance(double x1,double y1,double x2,double y2) {
 		double dx=x1-x2;
 		double dy=y1-y2;
@@ -21,6 +27,15 @@ public class Geometry {
 		return Math.sqrt(dx*dx+dy*dy);
 	}
 	
+	//NOT USED
+	/**
+	 * Calculates the crossing point of 2 lines (s1,v1) and (s2,v2). Does NOT check for linear independence.
+	 * @param s1 start point 1, [2]
+	 * @param v1 vector 1, [2]
+	 * @param s2 start point 2, [2]
+	 * @param v2 vector 2, [2]
+	 * @return crosspoint as array
+	 */
 	public static double[] crossPoint(double[] s1,double[] v1,double[] s2,double[] v2){
 		
 		double[] cross=new double[2];
@@ -36,12 +51,33 @@ public class Geometry {
 		return cross;
 	}
 	
+	//OUTDATED, DO NOT USE, points-array is structured differently now, see Polygon-class
+	/**
+	 * Calculates crossing points for multiple lines (points,vec1) with another line (start2,vec2). This calls crossPoint-method and only loops over the different starting points for line 1.
+	 * The cross points are written to the crossPoints array.
+	 * @param crossPoints array to write to, [x][2]
+	 * @param points start points for line 1, [x][2]
+	 * @param vec1 vector 1, [2]
+	 * @param start2 start point 2, [2]
+	 * @param vec2 vector 2, [2]
+	 */
 	public static void fillCrossPoints(double[][] crossPoints,double[][] points,double[] vec1,double[] start2,double[] vec2){
 		for(int i=0; i<points.length;i++){
 			crossPoints[i]=Geometry.crossPoint(points[i],vec1,start2,vec2);
 		}
 	}
 	
+	/**
+	 * Calculates the cross point of 2 lines and returns the multiplier of the vectors.
+	 * crossBounds[0] = multiplier of v1, crossBounds[1] = multiplier of v2
+	 * ->crossBounds[0]*v1+s1 = crossBounds[1]*v2+s2 = the cross point
+	 * 
+	 * @param s1 start point 1
+	 * @param v1 vector 1
+	 * @param s2 start point 2
+	 * @param v2 vector 2
+	 * @return multiplier for the vectors to reach the cross point
+	 */
 	public static double[] crossPointBounds(double[] s1,double[] v1,double[] s2,double[] v2){
 		
 		double[] crossBounds=new double[2];
@@ -57,22 +93,32 @@ public class Geometry {
 		return crossBounds;
 	}
 	
-
+	/**
+	 * Collison detection for 2 hitboxes. Iterates through the polygons and checks for detection (if the hitboxes are in range). 
+	 * @param h1 hitbox 1
+	 * @param h2 hitbox 2
+	 * @return the collision data from polygon-collision-method
+	 */
 	public static double[][] collision(Hitbox h1,Hitbox h2){
 		double middleDis=Geometry.distance(h1.getTranslatedMiddleX(),h1.getTranslatedMiddleY(),h2.getTranslatedMiddleX(),h2.getTranslatedMiddleY());
 		
-		//circle check
+		//circle check: hitboxes in range?
 		if(middleDis > (h1.getRadius()+h2.getRadius()) ){
 			return null;
 		}
 		
 		double[][] colData;
+		
 		List<Polygon> polys1=h1.getPolygons();
 		List<Polygon> polys2=h2.getPolygons();
+		
 		int polys1L=polys1.size();
 		int polys2L=polys2.size();
+		
+		//loops that iterate through polygons, TODO use Iterator?
 		for(int i=0; i<polys1L;i++){
 			for(int j=0; j<polys2L;j++){
+				//TODO extract the circle check from polygon-collision to here? ->1 less function call, if not optimized properly
 				colData=Geometry.collision(polys1.get(i),polys2.get(j));
 				if(colData!=null){
 					return colData;
@@ -82,8 +128,15 @@ public class Geometry {
 		return null;
 	}
 	
+	//counter used in debug dumps
 	public static int counter=0;
 	
+	/**
+	 * Collision detection for 2 polygons. If there is a collision, the 2 closest points calculated in the algorithm are returned.
+	 * @param p1 polygon 1
+	 * @param p2 polygon 2
+	 * @return the 2 points, which are closest to the middle point of the other polygon
+	 */
 	public static double[][] collision(Polygon p1,Polygon p2){
 		double middleDis=Geometry.distance(p1.getTranslatedMiddleX(),p1.getTranslatedMiddleY(),p2.getTranslatedMiddleX(),p2.getTranslatedMiddleY());
 		
@@ -92,21 +145,10 @@ public class Geometry {
 			return null;
 		}	
 		
+		//get middle points translated in the room
 		double[] middle1=new double[]{p1.getTranslatedMiddleX(),p1.getTranslatedMiddleY()};
 		double[] middle2=new double[]{p2.getTranslatedMiddleX(),p2.getTranslatedMiddleY()};
-		
-		//vec/nvec not needed in this version
-		/*
-		double[] vec=new double[2];
-		
-		vec[0]=middle2[0]-middle1[0];
-		vec[1]=middle2[1]-middle1[1];
-		
-		
-		double[] nvec=new double[2];
-		nvec[0]=vec[1];
-		nvec[1]=-vec[0];
-		*/
+		//-----
 
 		//get translated x/y coors of polygon points
 		double[][] points1=new double[p1.getNumPoints()][2];
@@ -121,6 +163,7 @@ public class Geometry {
 			points2[i][0]=p2.getTranslatedX(i);
 			points2[i][1]=p2.getTranslatedY(i);
 		}
+		//-----
 		
 		int id1=-1;
 		int id2=-1;
@@ -129,11 +172,13 @@ public class Geometry {
 		
 		double tempD;
 		
-		//crossPoints1.length = p1.getNumPoitns() !
-		//getting id of point with shortest distance between point of 1 (/2) and middle of 2 (/1)
+		//crossPoints1.length = p1.getNumPoints() !
+		
+		//find points closest to the other polygon
+		//by getting id of point with shortest distance between point of 1 (/2) and middle of 2 (/1)
 
 		for(int i=0; i<points1.length;i++){
-			tempD=Geometry.distance(middle2,points1[i]);
+			tempD=Geometry.distance(middle2,points1[i]);//middle 2 --- point of 1
 			if(tempD<minDis){
 				minDis=tempD;
 				id1=i;
@@ -147,7 +192,9 @@ public class Geometry {
 				id2=i;
 			}
 		}
+		//-----
 
+		//get vector from the selected points to the next and previous points
 		double vecs1[][]=new double[2][2];
 		double vecs2[][]=new double[2][2];
 		
@@ -155,7 +202,7 @@ public class Geometry {
 		vecs1[1]=calcNextVec(points1,id1);
 		vecs2[0]=calcPrevVec(points2,id2);
 		vecs2[1]=calcNextVec(points2,id2);
-
+		//-----
 		
 		
 		//Debug dump:
@@ -184,11 +231,22 @@ public class Geometry {
 		System.out.println("vecs2: "+Arrays.toString(vecs2[0])+" ; "+Arrays.toString(vecs2[1]));
 		*/
 		
+		//actual collision detection:
+		//2 vectors from polygon 1, 2 vectors from polygon 2
+		//-> 2*2=4 combinations
+		//v1,1 v2,1
+		//v1,2 v2,1
+		//v1,1 v2,2
+		//v1,2 v2,2
+		
+		
 		double[] bounds;
 		
-
 		//bounds[0]=k, multiplier of vecs1
 		//bounds[1]=l, multiplier of vecs2
+		//-> if the multiplier is smaller than 0 or bigger than 1, then the crosspoint is NOT on the line between the point and the next/prev point, in other words: not on the "line" of the vector
+		//-> in that case, there is no collision
+		
 		//-> 0<=k<=1 or 0<=l<=1 means collision
 		bounds=crossPointBounds(points1[id1],vecs1[0],points2[id2],vecs2[0]);
 		//System.out.println("Bounds00: "+bounds[0]+" , "+bounds[1]);
@@ -216,103 +274,46 @@ public class Geometry {
 		}
 		//System.out.println("NO collision"+counter++);
 		return null;
-		
-		
-		
-		
-		/*old version, using differences in x and y-direction
-		double maxX,maxY;
-		double[] sortedPOI=new double[4];
-		sortedPOI[0]=middle1[0];
-		sortedPOI[1]=points1[id1][0];
-		sortedPOI[2]=middle2[0];
-		sortedPOI[3]=points2[id2][0];
-		//sort
-		sortingNetwork(sortedPOI);
-		maxX=sortedPOI[3]-sortedPOI[0];
-		
-		sortedPOI[0]=middle1[1];
-		sortedPOI[1]=points1[id1][1];
-		sortedPOI[2]=middle2[1];
-		sortedPOI[3]=points2[id2][1];
-		//sort
-		sortingNetwork(sortedPOI);
-		maxY=sortedPOI[3]-sortedPOI[0];
-		
-		
-		boolean xCorrect=maxX >  ( Math.abs(middle1[0]-points1[id1][0])  + Math.abs(middle2[0]-points2[id2][0]) ) ;
-		boolean yCorrect=maxY >  ( Math.abs(middle1[1]-points1[id1][1])  + Math.abs(middle2[1]-points2[id2][1]) ) ;
-		if(xCorrect||yCorrect){
-			return null;
-		}
-		
-		return new double[][]{points1[id1],points2[id2]};
-		*/
-		
-		
-		
-		
-		
-		/*old version, using crosspoints, wrong results!
-		
-		double[][] crossPoints1=new double[p1.getNumPoints()][2];
-		double[][] crossPoints2=new double[p2.getNumPoints()][2];
-		
-		fillCrossPoints(crossPoints1,points1,nvec,middle1,vec);
-		fillCrossPoints(crossPoints2,points2,nvec,middle2,vec);
-		double minDisP1M2=Double.MAX_VALUE;
-		double minDisP2M1=Double.MAX_VALUE;
-		double tempD;
-		
-		for(int i=0; i<crossPoints1.length;i++){
-			tempD=Geometry.distance(crossPoints1[i],middle2);
-			if(tempD<minDisP1M2){
-				minDisP1M2=tempD;
-				id1=i;
-			}
-		}
-		for(int i=0; i<crossPoints2.length;i++){
-			tempD=Geometry.distance(crossPoints2[i],middle1);
-			if(tempD<minDisP2M1){
-				minDisP2M1=tempD;
-				id2=i;
-			}
-		}
-		
-		double disP1M1=distance(crossPoints1[id1],middle1);
-		double disP2M2=distance(crossPoints2[id2],middle2);
-		
-		if(disP1M1+disP2M2>=middleDis){
-			return new double[]{p1.getTranslatedX(id1),p1.getTranslatedY(id1),p2.getTranslatedX(id2),p2.getTranslatedY(id2)};
-		}
-		
-		return null;
-		*/
-		
 	}
 	
-	//IMPORTANT: nextPoint-point, so that the vector points at the next point!!!!!
+	
+	/**
+	 * Returns the vector from this point to the next point.
+	 * @param points all points of the polygon
+	 * @param id id of this point
+	 * @return the vector between the 2 points
+	 */
 	public static double[] calcNextVec(double[][] points, int id){
-		int nextId=id+1;
+		int nextId=id+1;//id of the next point
 		if(nextId>=points.length){
 			nextId=0;
 		}
 		
+		//calulating vector
+		//IMPORTANT: nextPoint-point, so that the vector points at the next point!!!!!
+		//the direction is needed, see "bounds" in the collision detection
 		return new double[]{points[nextId][0]-points[id][0], points[nextId][1]-points[id][1]};
 	}
 	
+	/**
+	 * Returns the vector from this point to the previous point.
+	 * @param points all points of the polygon
+	 * @param id id of this point
+	 * @return the vector between the 2 points
+	 */
 	public static double[] calcPrevVec(double[][] points, int id){
-		int nextId=id-1;
+		int nextId=id-1;//id of the previous point
 		if(nextId<0){
 			nextId=points.length-1;
 		}
-		
+
+		//calulating vector
 		return new double[]{points[nextId][0]-points[id][0], points[nextId][1]-points[id][1]};
 	}
 	
 	/**
 	 * 4-lined sorting network
-	 * @param array
+	 * @param array array to sort
 	 */
 	public static void sortingNetwork(double[] array){
 		double t;

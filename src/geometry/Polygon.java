@@ -3,13 +3,18 @@ package geometry;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
+/**
+ * A type of shape with multiple connecting points. For collision detection, a polygon needs to be convex.
+ */
 public class Polygon extends Shape implements Serializable{
 
 	private static final long serialVersionUID = 22L;
 
+	//!restructured:
 	//[0][i] x-coor of point i
 	//[1][i] y-coor of point i
 	private int[][] points;
+	//id of the point farthest away from the middle point
 	private int idMaxPoint;
 	
 	public Polygon(double[] offset,int[][] points){
@@ -31,7 +36,11 @@ public class Polygon extends Shape implements Serializable{
 		this(new int[][]{ {0,0,img.getWidth(),img.getWidth()} , {0,img.getHeight(),img.getHeight(),0}  });
 	}
 
-	public void calcValues(){
+	/**
+	 * This method calculates the middle point, the point farthest away from the middle, and the distance between the 2 points.
+	 * The distance is treated as the radius of this shape.
+	 */
+	private void calcValues(){
 		int nPoints=points[0].length;
 
 		middle[0]=0;
@@ -40,7 +49,7 @@ public class Polygon extends Shape implements Serializable{
 			middle[0]+=points[0][i];
 			middle[1]+=points[1][i];
 		}
-		middle[0]=middle[0]/nPoints;
+		middle[0]=middle[0]/nPoints;//average of all points
 		middle[1]=middle[1]/nPoints;
 		
 		radius=0;
@@ -54,6 +63,9 @@ public class Polygon extends Shape implements Serializable{
 		}
 	}
 	
+	//getter
+	
+	//translated x: like translated middle in Shape-class, but for a point specified by the id
 	public double getTranslatedX(int id){
 		return points[0][id]+offset[0];
 	}

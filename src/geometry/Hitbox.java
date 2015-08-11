@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The hitbox of a entity consists of a (array-)list of polygons.
+ */
 public class Hitbox extends Shape implements Serializable{
 
 	private static final long serialVersionUID = 21L;
@@ -19,6 +22,7 @@ public class Hitbox extends Shape implements Serializable{
 		this(new double[]{0,0},new ArrayList<Polygon>(Arrays.asList(p)));
 	}
 	
+	//list should be an array list, more efficient
 	public Hitbox(List<Polygon> polygonlist){
 		this(new double[]{0,0},polygonlist);
 		
@@ -31,7 +35,11 @@ public class Hitbox extends Shape implements Serializable{
 		calcValues();
 	}
 	
-	public void calcValues(){
+	/**
+	 * Calculates middle point of all polygons (by taking the average of their middle points), and the point farthest away from this middle and the distance between the 2 points.
+	 * See Polygon.calcValues()
+	 */
+	private void calcValues(){
 		int length=polygonlist.size();
 		middle[0]=0;
 		middle[1]=0;
@@ -67,6 +75,7 @@ public class Hitbox extends Shape implements Serializable{
 	
 	@Override
 	public void setOffset(double[] vec){
+		//the offset of all polygons needs to be updated as well, would be a lot easier with pointers ->TODO maybe simulate pointer using arrays?
 		this.offset=vec;
 		for(Polygon p:polygonlist){
 			p.setOffset(vec);
