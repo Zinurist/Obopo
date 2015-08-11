@@ -41,7 +41,7 @@ public class Rock extends Spell{
 	}
 
 	@Override
-	public void collideLink(Player player,int tickNr) {
+	public void collidePlayer(Player player,int tickNr) {
 		player.addHealth(-1);
 		addHealth(-1);
 	}

@@ -41,7 +41,7 @@ public class CameraMovement extends Spell{
 	public void init() {}
 
 	@Override
-	public void collideLink(Player player,int tickNr) {}
+	public void collidePlayer(Player player,int tickNr) {}
 
 	@Override
 	public void collideEntity(MovingEntity e,int tickNr) {}

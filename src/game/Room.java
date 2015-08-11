@@ -17,25 +17,28 @@ import java.util.List;
 
 import controllers.Game;
 
+/**
+ * A Room represents the level/part of the world, in which the player currently is and which is considered to be active, meaning all entities in this room are active.
+ */
 public class Room implements Serializable{
 
 	private static final long serialVersionUID = 10L;
 	
-	private BufferedImage background;
+	private BufferedImage background;//a background image
 	
-	private Tile[][] field;
-	private int[] nextRooms;
+	private Tile[][] field;//the terrain
+	private int[] nextRooms;//adjacent rooms, usually north/west/east/south, contains the id of the room
 	
 
 	private final int id;
 	private int width, height;
 	
 
-	private List<MovingEntity> movies;
+	private List<MovingEntity> movies;//maybe a bad name
 	private List<Entity> items;
 	private List<Spell> spells;
 	private Player player;
-	private int tickNr;
+	private int tickNr;//tickNr is needed to prevent double activation
 	
 	public Room(Game game,int id,Player player){
 		this.id=id;
@@ -43,7 +46,7 @@ public class Room implements Serializable{
 		width=30;
 		height=20;
 		field=new Tile[width][height];
-		for(int i=0; i<30;i++){
+		for(int i=0; i<30;i++){//creating the default testing world
 			for(int j=0; j<20;j++){
 				if(j>16){
 					field[i][j]=new Mountain();
@@ -136,7 +139,7 @@ public class Room implements Serializable{
 		return field[x][y].isSolid();
 	}
 	
-	public List<Spell> getAllSpells(){
+	public List<Spell> getAllSpells(){//creates a list of all spells
 		//List<Spell> all=new ArrayList<Spell>(spells.size()+player.getSpells().size());
 		List<Spell> all=new LinkedList<Spell>();
 		all.addAll(spells);
@@ -144,7 +147,7 @@ public class Room implements Serializable{
 		return all;
 	}
 	
-	public List<Entity> getAllEntities(){
+	public List<Entity> getAllEntities(){//creates a list of all entities including spells and the player
 		//List<Entity> all=new ArrayList<Entity>(items.size()+movies.size()+1);
 		List<Entity> all=new LinkedList<Entity>();
 		all.addAll(items);
@@ -169,13 +172,16 @@ public class Room implements Serializable{
 	}
 	
 	private void collisionHandling(int tickNr){
+		//checks for collision BETWEEN ENTITIES and calls collide-methods
+		//collision with the terrain is checked by MovingEntity
+		
 		//movingentities:
-		//1.link
+		//1.player
 		//2.movies
 		//3.spells
 		
 		//entities:
-		//1.link
+		//1.player
 		//2.movies
 		//3.spells
 		//4.items
@@ -192,7 +198,7 @@ public class Room implements Serializable{
 			}
 			
 			if(collision){
-				e.collideLink(player, tickNr);
+				e.collidePlayer(player, tickNr);
 			}
 		}
 		for(Spell sp:spells){
@@ -203,7 +209,7 @@ public class Room implements Serializable{
 			}
 			
 			if(collision){
-				sp.collideLink(player,tickNr);
+				sp.collidePlayer(player,tickNr);
 			}
 		}
 		for(Entity e:items){
@@ -214,7 +220,7 @@ public class Room implements Serializable{
 			}
 			
 			if(collision){
-				e.collideLink(player, tickNr);
+				e.collidePlayer(player, tickNr);
 			}
 		}
 		
@@ -259,10 +265,12 @@ public class Room implements Serializable{
 	}
 
 	private void updateLists(){
+		//Updates lists by removing terminated entities
+		
 		//1.items
 		//2.enemies
 		//3.enemy-spells
-		//4.link-spells
+		//4.player-spells
 		for(int i=0; i<items.size();i++){
 			if(items.get(i).isTerminated()){
 				items.remove(i);
@@ -292,7 +300,7 @@ public class Room implements Serializable{
 		}
 	}
 	
-	public void postFix(){
+	public void postFix(){//postFix, currently only vx/vy are reset
 		for(MovingEntity e:spells){
 			e.postFix();
 		}
@@ -306,7 +314,8 @@ public class Room implements Serializable{
 	}
 	
 	public int step(long time) {
-		tickNr++;
+		//step/update of the room, this returns the if of the next room, or -1, if the room doesnt change
+		tickNr++;//TODO hadle overflow? currently tickNr gets reset when players enters the room (see init below)
 		
 		for(MovingEntity e: movies){
 			e.step(time,this);
@@ -331,7 +340,8 @@ public class Room implements Serializable{
 		
 		postFix();
 		
-		//next Room
+		//next Room: if player touches one of the 4 sides, he is teleported/enters the adjacent room (if the id isn't -1)
+		//TODO replace this with EntranceEvents
 		if(player.getX()==0 && nextRooms[3]>=0){
 			player.setX(width*Tile.TILE_WIDTH-player.getWidth()-1);
 			return nextRooms[3];
@@ -363,7 +373,7 @@ public class Room implements Serializable{
 		return id;
 	}
 
-	public void init() {
+	public void init() {//called when this room is entered
 		tickNr=0;
 		spells=new LinkedList<Spell>();
 		for(MovingEntity e:movies){

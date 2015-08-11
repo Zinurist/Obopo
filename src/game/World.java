@@ -12,7 +12,7 @@ public class World implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private Map<Integer,Room> rooms;
+	private Map<Integer,Room> rooms;//all rooms mapped by their id
 	private Room currentRoom;
 	private Player player;
 	
@@ -37,7 +37,7 @@ public class World implements Serializable{
 	}
 
 	public Room getStartRoom() {
-		return rooms.get(0);
+		return rooms.get(0);//should be 0
 	}
 
 	public Room getCurrentRoom() {
@@ -46,7 +46,7 @@ public class World implements Serializable{
 	
 	public void setCurrentRoom(int index){
 		currentRoom=rooms.get(index);
-		width=currentRoom.getWidth()*Tile.TILE_WIDTH;
+		width=currentRoom.getWidth()*Tile.TILE_WIDTH;//rooms are rectangles
 		height=currentRoom.getHeight()*Tile.TILE_WIDTH;
 	}
 	
@@ -62,12 +62,12 @@ public class World implements Serializable{
 		int nextRoom=currentRoom.step(time);
 		if(nextRoom!=-1){
 			setCurrentRoom(nextRoom);
-			currentRoom.init();
+			currentRoom.init();//calling init on room change
 		}
 	}
 
 	public boolean load(String file){
-		return true;
+		return true;//totally not true
 	}
 	
 	public boolean save(String file){

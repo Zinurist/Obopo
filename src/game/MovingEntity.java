@@ -10,10 +10,22 @@ import java.util.List;
 import action.Ability;
 import action.Buff;
 
+/**
+ * MovingEntity is an entity which can move and has a step-method (called in every update and therefore part of the gameloop).
+ * MovingEntities also have health, and their terminated-status depends on their current health.
+ * 
+ * Overall:
+ * -Tile = Terrain
+ * --Entity = Objects
+ * ---Event = Timed Object
+ * ---MovingEntity = Lifeforms/Actor
+ * ----Spells = Short/Pet-like Lifeforms
+ */
 public abstract class MovingEntity extends Entity{
 
 	private static final long serialVersionUID = 2000L;
 	
+	//TODO put these into Geometry class
 	public static int toAngle(int dir){
 		switch(dir){
 		case 0:
@@ -51,24 +63,25 @@ public abstract class MovingEntity extends Entity{
 		case 3:
 			return new int[]{-1,0};
 		}
-		return new int[]{0,0};
+		return new int[]{0,0};//someone fucked up in this case
 	}
+	//-----
 	
 	public static final int AMP=2;
 	
-	protected int dir;
-	protected double vx,vy,xNext,yNext;
-	protected double v,baseV;
+	protected int dir;//direction
+	protected double vx,vy,xNext,yNext;//speed vector and the expected next position, used for moving-functions
+	protected double v,baseV;//base speed and actual speed (may be buffed)
 	protected double lastDis=Double.MAX_VALUE;
-	protected int maxHealth,health;
-	protected boolean vulnerable;
-	protected boolean canMove,imageDir,hasMoved;
+	protected int maxHealth,health;//max and current health
+	protected boolean vulnerable;//if true, this entity cant take damage
+	protected boolean canMove,imageDir,hasMoved;//hasmoved used to terminate certain moving objects, like the rockspell
 	protected List<Ability> abilities;
 	protected List<Buff> buffs;
-	protected List<Spell> spells; 
+	protected List<Spell> spells;//spells have a owner
 	
 	protected double alpha;
-	protected double rotSpeed;
+	protected double rotSpeed;//TODO implement rotation, also in Hitbox
 	
 	//1st
 	protected MovingEntity(ImageData iData, int iType, double x, double y, double v, int maxHealth, double alpha, double rotSpeed, int dir, boolean imageDir, boolean solid) {
@@ -119,6 +132,9 @@ public abstract class MovingEntity extends Entity{
 		this(iData, iType, x, y, v, 10, rotSpeed,0, false, true);//2nd
 	}
 	
+	//TODO add even more constructors
+	
+	//GETTER/SETTER:
 	
 	public int getNextX(){
 		return (int)Math.round(xNext);
@@ -172,6 +188,8 @@ public abstract class MovingEntity extends Entity{
 	public void setVulnerable(boolean vulnerable){
 		this.vulnerable=vulnerable;
 	}
+	
+	//ADDER
 	
 	public void multiplyV(double mult){
 		v=v*mult;
@@ -242,10 +260,10 @@ public abstract class MovingEntity extends Entity{
 		case 3:
 			vx+=-v*multiplier;
 			break;
-		}
+		}//TODO diagonal direction?
 	}
 	
-	//ROTATION, WARNING: colision?!
+	//ROTATION, WARNING: collision?! ->maybe in smaller steps and check for cillsion then
 	/**
 	 * Rotates entity, so that it looks at point (px/py).
 	 * @param px x-coor
@@ -285,12 +303,18 @@ public abstract class MovingEntity extends Entity{
 	
 	public void updatePosition(){
 		//hasMoved=x!=xNext || y!=yNext;
+		//only small change->not really moving
+		//this is needed if one moves towards a point, because of "jumping too far"
 		hasMoved=!(Math.abs((pos[0]-xNext) + (pos[1]-yNext)) <0.00000000000000000001);
 		pos[0]=xNext;
 		pos[1]=yNext;
 	}
 	
-	//outdated
+	/**
+	 * Corrects the position of the player regarding borders of the world and solid tiles in the terrain.
+	 * @param r the room in which the entity is
+	 * @return true, if position was corrected
+	 */
 	public boolean correctPosition(Room r){
 		int x1=getNextX()/Tile.TILE_WIDTH;
 		int y1=getNextY()/Tile.TILE_WIDTH;
@@ -351,12 +375,13 @@ public abstract class MovingEntity extends Entity{
 		return error;
 	}
 	
+	//the gameloop-step/update
 	public void step(long time,Room r){
 		for(Ability a:abilities){
 			a.step(time);
 		}
 		Buff b;
-		for(int i=0; i<buffs.size();i++){
+		for(int i=0; i<buffs.size();i++){//no iterator, because of concurrent modification
 			b=buffs.get(i);
 			b.step(time);
 			if(b.hasStopped()){
@@ -370,7 +395,7 @@ public abstract class MovingEntity extends Entity{
 			calcNextPosition(time);
 			if(solid){//only can collide with solid walls if the object is solid->ghost are real
 				boolean error=true;
-				while(error){
+				while(error){//TODO add counter to prevent endless loops
 					error=correctPosition(r);
 				}
 			}
@@ -389,8 +414,13 @@ public abstract class MovingEntity extends Entity{
 		vy=0;
 	}
 	
+	//custom step for implemented moving entity, like the player or spells
 	public abstract void turn(long time,Room r);
+	//init of abilities
 	public abstract void initAbilities();
+	//general init, doesnt need to call initAbilities and can be left empty
+	//is called whenever the player enters the room in which this entity is for the FIRST time
+	//after that, reinit is called instead, which also calls init
 	public abstract void init();
 	
 	public void reinit(){
@@ -402,6 +432,10 @@ public abstract class MovingEntity extends Entity{
 		spells=new LinkedList<Spell>();
 	}
 	
+	/**
+	 * Starts a spell and makes this the owner of the spell.
+	 * @param spell the spell to cast
+	 */
 	public void cast(Spell spell){
 		double x=this.pos[0] + getWidth()/2.0;
 		double y=this.pos[1] + getHeight()/2.0;
@@ -465,6 +499,11 @@ public abstract class MovingEntity extends Entity{
 		return false;
 	}
 	
+	/**
+	 * With the help of the collision data, this method tries to correct the position of the entity similar to the correctPosition-Method.
+	 * Still in development.
+	 * @param colData the collision data from the collision detection
+	 */
 	public void collisionCorrection(double[][] colData ){
 		//TODO this stuff
 		

@@ -19,8 +19,8 @@ public class Player extends MovingEntity{
 	private static final long serialVersionUID = 2001L;
 	
 	private int activeAbility;
-	private boolean moveInput,ignoreInputs;
-	private SkillSlots skills;
+	private boolean moveInput,ignoreInputs;//used for cutscenes etc. TODO change this system: change the controller to CutsceneController instead!
+	private SkillSlots skills;//uses skillslot
 	
 	public Player(int x, int y,int dir) {
 		super(ImageData.Player, dir, x, y,120.0,5, dir,true);
@@ -65,12 +65,11 @@ public class Player extends MovingEntity{
 			activeAbility=-1;
 		}
 		
-		if(moveInput){
+		if(moveInput){//cant always move, e.g. crippled/frozen
 			goForward(1);
-			//goTowards(700, 700);
 		}
 		
-		lookAt(500,500);
+		//lookAt(500,500);
 		
 	}
 
@@ -92,12 +91,12 @@ public class Player extends MovingEntity{
 	}
 
 	public void addKey(Key key) {
-		// TODO 
+		// TODO handle keys
 		
 	}
 
 	@Override
-	public void collideLink(Player player,int tickNr) {
+	public void collidePlayer(Player player,int tickNr) {
 		System.out.println("m8, sth's wrong");
 	}
 
@@ -106,7 +105,7 @@ public class Player extends MovingEntity{
 		
 	}
 
-	public double getHealthRatio() {
+	public double getHealthRatio() {//used for health bar
 		return (double)health/maxHealth;
 	}
 }

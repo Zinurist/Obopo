@@ -27,7 +27,7 @@ public class Entrance extends Entity {
 	}
 
 	@Override
-	public void collideLink(Player player,int tickNr) {
+	public void collidePlayer(Player player,int tickNr) {
 		world.setCurrentRoom(roomId);//change room
 	}
 	

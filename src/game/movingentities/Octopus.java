@@ -19,22 +19,22 @@ public class Octopus extends MovingEntity{
 	}
 
 	@Override
-	public void turn(long time, Room r) {
+	public void turn(long time, Room r) {//randomized turn
 		Random rng=new Random();
 		
-		if(rng.nextDouble()<0.01){
+		if(rng.nextDouble()<0.01){//direction change
 			setDirection(rng.nextInt(4));
 		}
 		
 		if(!abilities.get(0).isActivated()){
-			if(rng.nextDouble()<0.01){
+			if(rng.nextDouble()<0.01){//either he moves, or he changes the moving time to a random value
 				abilities.get(0).activate();
 			}else{
 				((TimedAbility)abilities.get(0)).setActiveTime(rng.nextInt(1000)+1500);
 			}
 		}
 		
-		if(rng.nextDouble()<0.01){
+		if(rng.nextDouble()<0.01){//chance to attack
 			abilities.get(1).activate();
 		}
 		
@@ -42,12 +42,12 @@ public class Octopus extends MovingEntity{
 
 	@Override
 	public void initAbilities() {
-		abilities.add(new MoveForward(this));
-		abilities.add(new RockThrow(this));
+		abilities.add(new MoveForward(this));//simulates moving
+		abilities.add(new RockThrow(this));//and attacking
 	}
 
 	@Override
-	public void collideLink(Player player,int tickNr) {
+	public void collidePlayer(Player player,int tickNr) {
 		player.addHealth(-1);
 	}
 

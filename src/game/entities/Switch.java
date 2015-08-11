@@ -32,7 +32,7 @@ public class Switch extends Entity{
 	}
 
 	@Override
-	public void collideLink(Player player, int tickNr) {
+	public void collidePlayer(Player player, int tickNr) {
 		if(activationTick!=tickNr-1){
 			for(Gate g:gates){
 				g.toggle();

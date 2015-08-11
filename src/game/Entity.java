@@ -5,18 +5,21 @@ import geometry.Hitbox;
 import geometry.Polygon;
 import gui.ImageData;
 
+/**
+ * An Entity is a tile, which can have a variable size, has a hitbox can collide with other entities.
+ */
 public abstract class Entity extends Tile {
 
 	private static final long serialVersionUID = 1000L;
 	
-	private static int ID_COUNTER=0;
+	private static int ID_COUNTER=0;//counter for IDs, every entity has a unique ID, used as hash
 	
-	protected double[] pos;
-	protected boolean terminated;
+	protected double[] pos;//[0]=x, [1]=y
+	protected boolean terminated;//if true, this entity will be removed from the game in the next(?) update-step
 	protected final int id;
-	//private double maxRadius;
 	protected Hitbox hitbox;
 	
+	//getter/setter:
 	public void setX(double x){
 		pos[0]=x;
 	}
@@ -101,6 +104,7 @@ public abstract class Entity extends Tile {
 		return false;
 	}
 	
+	//TODO add simpler constructors
 	protected Entity(ImageData iData, int iType, double x, double y,boolean solid){
 		this(new Hitbox(new Polygon(iData.getImg(iType))),iData,iType,x,y,solid);
 	}
@@ -116,6 +120,12 @@ public abstract class Entity extends Tile {
 		setHitbox(hitbox);
 	}
 
-	public abstract void collideLink(Player player,int tickNr);
+	/**
+	 * This is called when this entity collides with the player. These type of collision are usually handled differently than other collisions.
+	 * Important: This function is called by the Room, collision is therefore also checked by the room.
+	 * @param player the player
+	 * @param tickNr number of tick/step, can be used to prevent double-activation in 2 following steps (see Spell)
+	 */
+	public abstract void collidePlayer(Player player,int tickNr);
 	
 }

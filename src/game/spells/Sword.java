@@ -32,7 +32,7 @@ public class Sword extends Spell{
 	public void initAbilities() {}
 
 	@Override
-	public void collideLink(Player player,int tickNr) {}
+	public void collidePlayer(Player player,int tickNr) {}
 
 	@Override
 	public void init() {}

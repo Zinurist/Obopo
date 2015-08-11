@@ -191,6 +191,14 @@ public class Game extends Thread{
 	 * @param time passed time since last update
 	 */
 	private void step(long time) {
+		//calling steps:
+		//roomcontroller.input	*1
+		//->world.step			*1
+		//-->room.step			*1
+		//--->entities.step 	*x
+		//---->this.turn	 	*1 (class dependent)
+		//---->abilities.step 	*y
+		//---->buffs.step 		*z
 		activeController.input(inputCont.readInput(),time);
 		cam.update();
 	}

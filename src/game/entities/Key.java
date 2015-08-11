@@ -16,7 +16,7 @@ public class Key extends Entity {
 	}
 
 	@Override
-	public void collideLink(Player player,int tickNr) {
+	public void collidePlayer(Player player,int tickNr) {
 		player.addKey(this);
 		terminated=true;
 	}

@@ -16,7 +16,7 @@ public class HealthPotion extends Entity {
 	}
 
 	@Override
-	public void collideLink(Player player,int tickNr) {
+	public void collidePlayer(Player player,int tickNr) {
 		player.addHealth(1);//maybe more, if health-system changes
 		setTerminated(true);
 	}
