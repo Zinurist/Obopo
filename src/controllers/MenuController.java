@@ -6,13 +6,20 @@ import game.World;
 import gui.Layer;
 import gui.MenuLayer;
 
+/**
+ * A MenuController represents a game menu. This class implements selection of menus using a simple cursor.
+ */
 public abstract class MenuController extends Controller{
 	
 	private String[] items;
 	protected int cursor;
+	//this MenuLayer should be the same in the list, an extra reference is used for easier access
 	private MenuLayer layer;
 	
+	//time counter, used to make sure, pressing 'up' doesn't scroll through the menu too fast
+	//'up'/'down' is processed currently every 100ms, see TIME_LIMIT
 	private long timeC;
+	private static final long TIME_LIMIT=100;
 	
 	public MenuController(Game game,World world,List<Layer> layers,Camera cam,MenuLayer layer,String[] items){
 		super(game,world,layers,cam);
@@ -47,8 +54,8 @@ public abstract class MenuController extends Controller{
 			break;
 		}
 		
-		if(timeC>=100){
-		switch(keys[0]){
+		if(timeC>=TIME_LIMIT){
+			switch(keys[0]){
 			case 2://down	
 				if(cursor+1<items.length){
 					cursor++;
@@ -74,6 +81,10 @@ public abstract class MenuController extends Controller{
 		layer.setMenuController(this);
 	}
 	
+	/**
+	 * The method called then a player selects a menu item and presses 'Enter'.
+	 * @return the new controller, not currently used!
+	 */
 	public abstract Controller executeMenu();
 
 }

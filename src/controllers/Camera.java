@@ -18,7 +18,7 @@ public class Camera {
 	
 	public Camera(World world,int frameWidth, int frameHeight) {
 		this.world=world;
-		this.player=world.getLink();
+		this.player=world.getPlayer();
 		this.frameWidth=frameWidth;
 		this.frameHeight=frameHeight;
 		xOffset=0;

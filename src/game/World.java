@@ -22,7 +22,7 @@ public class World implements Serializable{
 		return rooms.get(roomId);
 	}
 	
-	public Player getLink(){
+	public Player getPlayer(){
 		return player;
 	}
 	

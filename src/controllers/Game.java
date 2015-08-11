@@ -17,8 +17,12 @@ import java.util.LinkedList;
 
 import javax.swing.JFrame;
 
+/**
+ * Holds all data, controllers and gui elements of the game and manages them. Also handles the gameloop.
+ */
 public class Game extends Thread{
 
+	//called by Launcher
 	public static void startGame() {
 		Game g=new Game();
 		g.start();
@@ -41,6 +45,8 @@ public class Game extends Thread{
 	//state
 	private boolean running;
 	
+	//-----------------GETTER-----------------
+	
 	public World getWorld(){
 		return world;
 	}
@@ -56,11 +62,19 @@ public class Game extends Thread{
 	public Controller getActiveController(){
 		return activeController;
 	}
+
+	public Camera getCam() {
+		return cam;
+	}
+	
+	//-----------------SETTER-----------------
 	
 	public void setActiveController(Controller activeController){
 		this.activeController=activeController;
-		activeController.init();
+		activeController.init();//init needs to be called
 	}
+	
+	//----------------------------------------
 	
 	private Game(){
 		initWorld();
@@ -68,13 +82,20 @@ public class Game extends Thread{
 		initGUI();
 	}
 	
+	/**
+	 * Creates the world object.
+	 */
 	private void initWorld() {
 		world=new World(this);
 	}
 	
+	/**
+	 * Creates all controllers and layers and the camera. Also links them with the world (needs to exist already).
+	 */
 	private void initControllersAndLayers(){
 		cam=new Camera(world,30*Tile.TILE_WIDTH,20*Tile.TILE_WIDTH);
 		
+		//layers, act as signeltons
 		BackgroundLayer background=new BackgroundLayer(world,cam);
 		TerrainLayer terrain=new TerrainLayer(world,cam);
 		EntityLayer entity=new EntityLayer(world,cam);
@@ -85,25 +106,32 @@ public class Game extends Thread{
 		LinkedList<Layer> roomLayers=new LinkedList<Layer>();
 		LinkedList<Layer> menuLayers=new LinkedList<Layer>();
 
+		//graphical layers for normal gameplay
 		roomLayers.add(background);
 		roomLayers.add(terrain);
 		roomLayers.add(entity);
 		roomLayers.add(ability);
 		
+		//graphical layers for in-game menu
 		menuLayers.add(background);
 		menuLayers.add(terrain);
 		menuLayers.add(entity);
 		menuLayers.add(menu);
 		
+		//room and menu controller
 		roomCont=new RoomController(this,world,roomLayers,cam,debug);
 		menuCont=new GameMenuController(this,world,menuLayers,cam,menu);
 		
-		
+		//starting with room controller (=normal gameplay)
 		activeController=roomCont;
-		this.inputCont=new Input();
 		
+		//input controller to handle player input
+		this.inputCont=new Input();
 	}
 	
+	/**
+	 * Creates GUI Elements, like the main window.
+	 */
 	private void initGUI() {
 		panel=new Panel(this);
 		panel.setPreferredSize(new Dimension(cam.getFrameWidth(),cam.getFrameHeight()));
@@ -113,7 +141,7 @@ public class Game extends Thread{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setContentPane(panel);
-		frame.addKeyListener(inputCont);
+		frame.addKeyListener(inputCont);//adding the input controller as keylistener
 		frame.pack();
 		
 		frame.setVisible(true);
@@ -121,27 +149,35 @@ public class Game extends Thread{
 	
 	@Override
 	public void run(){
+		//gameloop
 		running=true;
+		
+		//when dif = neededDif, the game is updated
 		long timeOld=System.currentTimeMillis();
 		long timeNew=0;
 		long dif=0;
-		long neededDif=20;
-		int stepCount=0;
+		long neededDif=20;//->update after 20ms
+		int stepCount=0;//update-counter used for animation
 		while(running){
+			//calculating passed time
 			timeNew=System.currentTimeMillis();
 			dif+=timeNew-timeOld;
 			timeOld=System.currentTimeMillis();
 			
 			if(dif>=neededDif){
-				dif-=neededDif;
-				step(neededDif);
+				//->update
+				//calling update-method with passed time
+				step(dif);
+				dif=0;
 				stepCount++;
 				if(stepCount==5){
+					//After 5 steps (~100ms) -> animation update
 					ImageData.animate();
 					stepCount=0;
 				}
 			}
 			
+			//gui update
 			panel.repaint();
 			try {
 				Thread.sleep(20);
@@ -149,14 +185,13 @@ public class Game extends Thread{
 		}
 	}
 	
-	
-	public void step(long time) {
+	/**
+	 * Update method called by the game loop. Calls update-methods of other elements.
+	 * @param time passed time since last update
+	 */
+	private void step(long time) {
 		activeController.input(inputCont.readInput(),time);
 		cam.update();
-	}
-
-	public Camera getCam() {
-		return cam;
 	}
 	
 }

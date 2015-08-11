@@ -20,7 +20,7 @@ public class AbilityLayer extends Layer {
 	//no zoom, permanent shit
 	@Override
 	public void draw(Graphics g) {
-		Player player=world.getLink();
+		Player player=world.getPlayer();
 		
 		int count=5;
 		BufferedImage img;

@@ -5,8 +5,13 @@ import gui.Layer;
 
 import java.util.List;
 
+/**
+ * A savegame file explorer.
+ */
 public class FileMenuController extends Controller{
 
+	//TODO implement
+	
 	protected FileMenuController(Game game, World world, List<Layer> layers,Camera cam) {
 		super(game, world, layers, cam);
 	}

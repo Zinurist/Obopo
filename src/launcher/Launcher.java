@@ -14,6 +14,12 @@ import javax.swing.JPanel;
 import controllers.Game;
 import editor.Editor;
 
+/**
+ * Launcher of the game.
+ * ->Play
+ * ->Level Editor
+ * ->Exit
+ */
 public class Launcher extends JFrame{
 
 	//generated
@@ -61,7 +67,7 @@ public class Launcher extends JFrame{
 		});
 		
 		
-		JLabel lbl=new JLabel("Zelda v2");
+		JLabel lbl=new JLabel("Obopo");
 
 		pBtn.add(btnGame);
 		pBtn.add(btnEditor);

@@ -25,7 +25,7 @@ public class EntityLayer extends Layer {
 			g.drawImage(e.getImg(), cam.getXOnScreen(e), cam.getYOnScreen(e), cam.getWidthOnScreen(e),cam.getHeightOnScreen(e), null);
 		}
 		
-		Player player=world.getLink();
+		Player player=world.getPlayer();
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRect(cam.getXOnScreen(player), cam.getYOnScreen(player,-10), cam.getWidthOnScreen(player), cam.getHeightOnScreen(5));
 		g.setColor(Color.GREEN);
