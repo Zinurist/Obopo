@@ -45,7 +45,7 @@ public class RoomController extends Controller {
 		//keys[1] = key queue /direction  (ex: player presses up then right -> up is in keys[1])
 		//keys[2] = ability and game controlling stuff
 		
-		//TODO what is this
+		//used by e.g. Events (see CameraEvent)
 		if(!player.getIgnoreInputs()){
 			//0, 1, 2, 3 = up, right, down, left
 			if(keys[0] >=0 && keys[0] <= 3){

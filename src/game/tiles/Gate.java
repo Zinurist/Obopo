@@ -18,6 +18,7 @@ public class Gate extends Tile{
 		this.onType=iType;
 	}
 	
+	//activating the gate: change image data, change solid state
 	public void toggle(){
 		setSolid(!solid);
 		if(solid){

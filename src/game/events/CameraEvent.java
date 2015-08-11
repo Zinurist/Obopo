@@ -8,6 +8,7 @@ public class CameraEvent extends Event{
 
 	private static final long serialVersionUID = 4002L;
 	
+	//creates a CameraMovement Object (=dummy), and makes the camera follow it
 	
 	private CameraMovement cm;
 	
@@ -18,11 +19,11 @@ public class CameraEvent extends Event{
 
 	@Override
 	public void start() {
-		setTerminated(true);
+		setTerminated(true);//event gets removed from the game
 		game.getCam().follow(cm);
-		player.setCanMove(false);
-		player.setIgnoreInputs(true);
-		player.cast(cm);
+		player.setCanMove(false);//player cant move
+		player.setIgnoreInputs(true);//no input processing, mainly used by RoomControllers
+		player.cast(cm);//start the camera movement as a spell
 	}
 
 	@Override

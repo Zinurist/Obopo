@@ -7,6 +7,10 @@ public class FallEvent extends Event{
 
 	private static final long serialVersionUID = 4004L;
 	
+	//Similar to EntranceEvent, but player position is reserved
+	//will be obsolete soon
+	//TODO remove
+	
 	private int roomId;
 	private double belowX,belowY;
 	

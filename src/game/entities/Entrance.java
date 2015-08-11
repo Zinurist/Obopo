@@ -9,6 +9,9 @@ public class Entrance extends Entity {
 
 	private static final long serialVersionUID = 1001L;
 	
+	//Obsolete!
+	//EntranceEvent should be used.
+	//TODO remove this entity
 	
 	private int roomId;
 	private World world;
@@ -25,7 +28,7 @@ public class Entrance extends Entity {
 
 	@Override
 	public void collideLink(Player player,int tickNr) {
-		world.setCurrentRoom(roomId);
+		world.setCurrentRoom(roomId);//change room
 	}
 	
 }

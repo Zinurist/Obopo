@@ -12,9 +12,12 @@ public class CameraMovement extends Spell{
 
 	private static final long serialVersionUID = 3001L;
 	
+	//This spell is used by CameraEvent. Can also be used as moveTo-dummy for "EntityMoveEvent"
+	
 	private double toX,toY;
 	private Event camEvent;
 	
+	//TODO maybe make movement time dependent on something different than the to-point
 	public CameraMovement( double x, double y,double toX, double toY,double v,Event camEvent) {
 		super(ImageData.Empty, 0, x, y, v,1, 1, false,false);
 		this.toX=toX;
@@ -25,7 +28,7 @@ public class CameraMovement extends Spell{
 	@Override
 	public void turn(long time, Room r) {
 		goTowards(toX, toY);
-		if(!hasMoved){
+		if(!hasMoved){//stop when the point has been reached
 			terminated=true;
 			camEvent.stop();
 		}

@@ -10,6 +10,8 @@ public class Rock extends Spell{
 
 	private static final long serialVersionUID = 3003L;
 	
+	//simple rock spell, creates a flying rock
+	
 	public Rock(double x, double y, double v,int dir, MovingEntity caster) {
 		super(ImageData.Rock, 0, x, y, v, dir, 1,false, caster);
 	}

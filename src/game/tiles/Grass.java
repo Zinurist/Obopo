@@ -9,7 +9,6 @@ public class Grass extends Tile {
 	
 	public Grass() {
 		super(ImageData.Ground, 1, false);
-		// TODO Auto-generated constructor stub
 	}
 
 }

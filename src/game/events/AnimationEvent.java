@@ -14,12 +14,12 @@ public class AnimationEvent extends Event{
 
 	@Override
 	public void start() {
-		
+		//TODO, maybe implement different animation and image-data-storage system
 	}
 
 	@Override
 	public void stop() {
-		
+		//TODO
 	}
 
 }

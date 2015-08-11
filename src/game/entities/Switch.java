@@ -13,9 +13,10 @@ public class Switch extends Entity{
 	private static final long serialVersionUID = 1004L;
 	
 	
-	private int activationTick;
-	private List<Gate> gates;
+	private int activationTick;//needed to prevent double activation
+	private List<Gate> gates;//list of gates
 	
+	//construction of switches when loading a save game may be complicated
 	protected Switch( double x, double y) {
 		super(ImageData.Hills, 0, x, y, true);
 		activationTick=0;
