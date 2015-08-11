@@ -198,6 +198,7 @@ public class Game extends Thread{
 		//--->entities.step 	*x
 		//---->this.turn	 	*1 (class dependent)
 		//---->abilities.step 	*y
+		//----->this.action 	*1 (class dependent)
 		//---->buffs.step 		*z
 		activeController.input(inputCont.readInput(),time);
 		cam.update();

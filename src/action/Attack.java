@@ -4,6 +4,11 @@ import game.MovingEntity;
 import game.spells.Sword;
 import gui.ImageData;
 
+/**
+ * Simple sword attack, that starts a sword-spell.
+ * CD:500ms
+ * AC:250ms
+ */
 public class Attack extends TimedAbility{
 	
 	private Sword sword;
@@ -19,15 +24,15 @@ public class Attack extends TimedAbility{
 
 	@Override
 	protected void start() {
-		caster.setCanMove(false);
+		caster.setCanMove(false);//cant move during the attack
 		sword=new Sword(0,0,0,caster);
 		caster.cast(sword);
 	}
 
 	@Override
 	protected void stop() {
-		caster.setCanMove(true);
-		sword.setTerminated(true);
+		caster.setCanMove(true);//can move again
+		sword.setTerminated(true);//remove the sword
 	}
 
 }

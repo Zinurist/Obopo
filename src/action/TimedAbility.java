@@ -4,9 +4,12 @@ import game.MovingEntity;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * An Extension of Ability: TimedAbilities can also have a casting time. Behaves like an Ability, expect it deactivates after a set amount of time instead of the next step.
+ */
 public abstract class TimedAbility extends Ability {
 
-	protected long ac,actime;
+	protected long ac,actime;//counter and max active time
 	
 	public TimedAbility(int id,String name,MovingEntity caster,  BufferedImage image, long cooldownTime,long activeTime) {
 		super(id,name,caster,image,cooldownTime);
@@ -44,7 +47,7 @@ public abstract class TimedAbility extends Ability {
 		}
 	}
 	
-	public double getRestPercentageAC() {
+	public double getRestPercentageAC() {//used for active bar
 		return ((double)(actime-ac)/(double)actime);
 	}
 

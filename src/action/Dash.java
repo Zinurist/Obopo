@@ -3,6 +3,10 @@ package action;
 import game.MovingEntity;
 import gui.ImageData;
 
+/**
+ * The caster is teleported forward. Since this calls the goForward-method, collision detection is active.
+ * CD:3s
+ */
 public class Dash extends Ability{
 
 	public Dash(MovingEntity caster) {

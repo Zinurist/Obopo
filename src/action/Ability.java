@@ -5,10 +5,14 @@ import gui.ImageData;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * A Representation of Abilities with cooldowns.
+ * Abilities are often connect with spells, in that they create a spell. They also have a caster, just like spells.
+ */
 public abstract class Ability {
 
 	
-	private long cd,cdtime;
+	private long cd,cdtime;//cooldown counter and max time
 	private boolean activated;
 	private final String name;
 	private final int id;
@@ -22,6 +26,7 @@ public abstract class Ability {
 		this.cdtime=cooldownTime;
 		cd=cdtime;
 		
+		//transparent image is displayed when in cooldown, its created at startup (TODO better than that)
 		img=new BufferedImage(image.getWidth(),image.getHeight(),BufferedImage.TYPE_INT_ARGB);
 		transparentImg=new BufferedImage(image.getWidth(),image.getHeight(),BufferedImage.TYPE_INT_ARGB);
 		img.getGraphics().drawImage(image, 0, 0, null);
@@ -32,7 +37,7 @@ public abstract class Ability {
 	
 	public void setCoolDownTime(long cooldownTime){
 		cdtime=cooldownTime;
-	}
+	}//can dynamically change
 	
 	protected void setActivated(boolean activate){
 		if(activated != activate){
@@ -47,7 +52,7 @@ public abstract class Ability {
 	}
 	
 	public long getRestSeconds(){
-		return ((long)(cdtime-cd)/1000)+1;//+1, um aufzurunden
+		return ((long)(cdtime-cd)/1000)+1;//+1, to round up
 	}
 	
 	public BufferedImage getImg(){
@@ -83,7 +88,7 @@ public abstract class Ability {
 	
 	public void step(long time){
 		addTime(time);
-		if(activated){
+		if(activated){//-> step 1: activate, next step 2: deactivate
 			action();
 			setActivated(false);
 		}
@@ -98,12 +103,12 @@ public abstract class Ability {
 		return false;
 	}
 	
-	protected abstract void action();
-	protected abstract void start();
-	protected abstract void stop();
+	protected abstract void action();//called in a step
+	protected abstract void start();//called when activated
+	protected abstract void stop();//called when deactivated, happens in the next step
 	
 
-	public double getRestPercentageCD() {
+	public double getRestPercentageCD() {//used for bars
 		return ((double)(cdtime-cd)/(double)cdtime);
 	}
 

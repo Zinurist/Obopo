@@ -3,6 +3,10 @@ package action;
 import game.MovingEntity;
 import gui.ImageData;
 
+/**
+ * Used to simulate invincibility after being hit. It therefore has a variable ac time.
+ * AC:---
+ */
 public class Invincibility extends Buff {
 	
 	public Invincibility(MovingEntity caster,long activeTime) {

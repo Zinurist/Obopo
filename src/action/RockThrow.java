@@ -4,6 +4,10 @@ import game.MovingEntity;
 import game.spells.Rock;
 import gui.ImageData;
 
+/**
+ * Creates a rock spell.
+ * CD:2s
+ */
 public class RockThrow extends Ability {
 	
 	public RockThrow(MovingEntity caster) {

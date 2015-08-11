@@ -4,9 +4,12 @@ import game.MovingEntity;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * A buff is a TimedAbility which acts more like a spell, in that it activates upon its creation. It can also be a permanent buff.
+ */
 public abstract class Buff extends TimedAbility{
 
-	protected boolean permanent,hasStopped,secret;
+	protected boolean permanent,hasStopped,secret;//TODO make own class for permanent buffs, find out, what secret/hasStopped is
 	
 	public Buff(int buffId, String name, MovingEntity caster, BufferedImage image,long activeTime,boolean secret) {
 		super(buffId+1000, name, caster, image, 0, activeTime);

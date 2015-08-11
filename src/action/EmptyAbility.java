@@ -2,6 +2,9 @@ package action;
 
 import gui.ImageData;
 
+/**
+ * Does nothing. Used to display empty Ability socket/skill slot for the player
+ */
 public class EmptyAbility extends Ability {
 
 	public EmptyAbility() {
