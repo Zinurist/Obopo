@@ -9,6 +9,9 @@ import controllers.Game;
 
 
 @SuppressWarnings("serial")
+/**
+ * The JPanel used for the main window. When repainted, it calls all draw-methods of the different active layers.
+ */
 public class Panel extends JPanel {
 
 	private Game game;

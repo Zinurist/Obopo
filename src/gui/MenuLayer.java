@@ -9,9 +9,14 @@ import java.awt.Graphics;
 import controllers.Camera;
 import controllers.MenuController;
 
+/**
+ * A layer that draws a menu.
+ * 
+ * Usually the top layer.
+ */
 public class MenuLayer extends Layer{
 
-	private MenuController menu;
+	private MenuController menu;//MenuController needed for menu-data
 	private Font font;
 	
 	public MenuLayer(World world,Camera cam) {
@@ -23,13 +28,14 @@ public class MenuLayer extends Layer{
 	
 	public void setMenuController(MenuController menu){
 		this.menu=menu;
+		//TODO make sure, menu is never null? use dummy-menu?
 	}
 
 
 	@Override
 	public void draw(Graphics g) {
 		if(menu==null){
-			//TODO error
+			//TODO error, may be removed, if menu is never null
 			System.out.println("error");
 		}else{
 			g.setFont(font);
@@ -43,7 +49,7 @@ public class MenuLayer extends Layer{
 			for(String s: menu.getItems()){
 				if(counter==cursor) {
 					g.setColor(Color.YELLOW);
-					g.drawString(">"+s, 65, count);
+					g.drawString(">"+s, 65, count);//cursor
 					g.setColor(Color.WHITE);
 				}else{
 					g.drawString(s, 70, count);

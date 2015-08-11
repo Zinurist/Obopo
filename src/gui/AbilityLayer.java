@@ -11,6 +11,11 @@ import action.Ability;
 import action.Buff;
 import controllers.Camera;
 
+/**
+ * Draws information on the skills/abilities and (de)buffs of the player.
+ * 
+ * This layer should be drawn on the Entity Layer.
+ */
 public class AbilityLayer extends Layer {
 
 	public AbilityLayer(World world,Camera cam){
@@ -24,6 +29,7 @@ public class AbilityLayer extends Layer {
 		
 		int count=5;
 		BufferedImage img;
+		//drawing abilities, using transparent image and cooldown bar, if it is in cooldown
 		for(Ability a : player.getSkills()){
 			if(a.onCooldown()){
 				img=a.getTransparentImg();
@@ -40,6 +46,7 @@ public class AbilityLayer extends Layer {
 			count+= 5+img.getWidth();
 		}
 		
+		//draw buffs
 		count=5;
 		for(Buff b : player.getBuffs()){
 			if(!b.isSecret()){

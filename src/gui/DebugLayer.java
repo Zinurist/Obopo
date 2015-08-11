@@ -10,6 +10,11 @@ import java.util.List;
 
 import controllers.Camera;
 
+/**
+ * A layer that draws the hitboxes of entities for debug purposes.
+ * 
+ * This layer is usually drawn last, or before a menu-layer.
+ */
 public class DebugLayer extends Layer {
 
 	public DebugLayer(World world, Camera cam) {
@@ -19,7 +24,7 @@ public class DebugLayer extends Layer {
 	@Override
 	public void draw(Graphics g) {
 		List<Entity> ents=world.getCurrentRoom().getAllEntities();
-		g.setColor(new Color(200,150,0,170));
+		g.setColor(new Color(200,150,0,170));//slightly transparent orange
 		
 		int[][] points;
 		for(Entity e:ents){

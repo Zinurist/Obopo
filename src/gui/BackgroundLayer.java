@@ -6,6 +6,11 @@ import java.awt.image.BufferedImage;
 import game.World;
 import controllers.Camera;
 
+/**
+ * Draws a background layer. This is used e.g. for a starting menu.
+ * 
+ * This layer is usually the first layer drawn.
+ */
 public class BackgroundLayer extends Layer {
 
 	public BackgroundLayer(World world, Camera cam) {

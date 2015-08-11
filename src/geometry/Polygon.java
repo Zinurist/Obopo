@@ -13,7 +13,10 @@ public class Polygon extends Shape implements Serializable{
 	//!restructured:
 	//[0][i] x-coor of point i
 	//[1][i] y-coor of point i
+	//this structure is needed for easier drawing in the DebugLayer!
 	private int[][] points;
+	
+	
 	//id of the point farthest away from the middle point
 	private int idMaxPoint;
 	

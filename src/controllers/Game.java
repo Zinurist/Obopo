@@ -5,6 +5,7 @@ import game.World;
 import gui.AbilityLayer;
 import gui.BackgroundLayer;
 import gui.DebugLayer;
+import gui.EmptyWindow;
 import gui.EntityLayer;
 import gui.ImageData;
 import gui.Layer;
@@ -136,11 +137,11 @@ public class Game extends Thread{
 		panel=new Panel(this);
 		panel.setPreferredSize(new Dimension(cam.getFrameWidth(),cam.getFrameHeight()));
 
-		//frame=new EmptyWindow(panel, true);
-		frame=new JFrame();
+		frame=new EmptyWindow(panel, true);
+		//frame=new JFrame(); alternative: use normal frame
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
-		frame.setContentPane(panel);
+		//frame.setContentPane(panel);
 		frame.addKeyListener(inputCont);//adding the input controller as keylistener
 		frame.pack();
 		

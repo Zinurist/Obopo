@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class EmptyWindow extends JFrame{
 	
+	//Extracted from DrawCool
+	
 	private JPanel p;
 	
 	public EmptyWindow(JPanel panel, boolean moveable){
@@ -29,7 +31,7 @@ public class EmptyWindow extends JFrame{
 				}
 				@Override
 				public void mouseDragged(MouseEvent me) {
-					if(me.isControlDown()){
+					if(me.isControlDown()){//!!!TODO
 						addPos(me.getXOnScreen()-xOld,me.getYOnScreen()-yOld);
 						xOld=me.getXOnScreen();
 						yOld=me.getYOnScreen();
