@@ -6,12 +6,15 @@ import game.World;
 import game.movingentities.Player;
 import geometry.Polygon;
 
+/**
+ * Camera of the game world.
+ */
 public class Camera {
 
 	private World world;
 	private Player player;
-	private MovingEntity follow;
-	private int frameWidth,frameHeight;
+	private MovingEntity follow;//camera follows this (with this as center), if followME=true
+	private int frameWidth,frameHeight;//width/height of the camera in relation to the frame =actual width/height of the JPanel
 	private boolean followME;
 	private int xOffset,yOffset;
 	private double horizontalZoom,verticalZoom;
@@ -31,10 +34,14 @@ public class Camera {
 
 	public void update() {
 		if(followME){
-			centerOn(follow.getX()+follow.getWidth()/2,follow.getY()+follow.getHeight()/2);
+			centerOn(follow.getX()+follow.getWidth()/2,follow.getY()+follow.getHeight()/2);//middle point of ME, TODO get middle point from hitbox??
 		}
 	}
 	
+	/**
+	 * Start following me. Also sets followME to true.
+	 * @param me entity to follow
+	 */
 	public void follow(MovingEntity me){
 		setFollow(me);
 		setFollowME(true);
@@ -53,6 +60,7 @@ public class Camera {
 		xOffset=(int)Math.round(x*horizontalZoom-frameWidth/2);
 		yOffset=(int)Math.round(y*verticalZoom-frameHeight/2);
 		
+		//checking and setting camera limits
 		if(xOffset<0){
 			xOffset=0;
 		}else if(xOffset>getWidthOnScreen(world.getWidth())-frameWidth){
@@ -74,6 +82,8 @@ public class Camera {
 	public int getYOffset(){
 		return yOffset;
 	}
+	
+	//used to get translated positions of objects
 	
 	public int getXOnScreen(int x){
 		return (int)Math.round(x*horizontalZoom-xOffset);
