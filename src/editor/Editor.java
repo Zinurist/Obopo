@@ -1,6 +1,7 @@
 package editor;
 
 import game.World;
+import gui.Layer;
 import gui.Panel;
 
 import java.awt.BorderLayout;
@@ -8,7 +9,9 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,13 +25,11 @@ import javax.swing.JTabbedPane;
 import controllers.Camera;
 
 public class Editor {
-
-	//TODO all
 	
 	//GUI
 	private JFrame mainEditor;
 	private JFrame mapEditor;
-	private Panel worldPanel;
+	private ArrayList<Layer> layers;
 	
 	//Data
 	private World world;
@@ -144,22 +145,26 @@ public class Editor {
 		
 		JButton mapBtn=new JButton("Open map editor");
 		JLabel controlInfo=new JLabel("INFO");
+		controlInfo.setBorder(BorderFactory.createEmptyBorder(0,5,0,5));
 
 		controlPanel.add(mapBtn);
 		controlPanel.add(controlInfo);
 
+		bottomPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		bottomPanel.add(controlPanel, BorderLayout.WEST);
 		bottomPanel.add(quickEdit, BorderLayout.CENTER);
 		//--------------
 		
 		//---WEST---
 		objectSelect.setPreferredSize(new Dimension(200,400));
+		objectSelect.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		objectSelect.addTab("Entity", null);
 		objectSelect.addTab("Tile", null);
 		//---------
 		
 		//---EAST---
 		objectEdit.setPreferredSize(new Dimension(200,400));
+		objectEdit.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		objectEdit.addTab("Entities", null);
 		objectEdit.addTab("Tiles", null);
 		objectEdit.addTab("Rooms", null);
@@ -167,14 +172,15 @@ public class Editor {
 		
 		//---NORTH---
 		roomView.setPreferredSize(new Dimension(400,400));
+		roomView.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		roomView.addTab("room1", null);
 		roomView.addTab("room2", null);
 		//---------
-				
+
+		contentPane.add(roomView, BorderLayout.CENTER);
 		contentPane.add(bottomPanel, BorderLayout.SOUTH);
 		contentPane.add(objectSelect, BorderLayout.WEST);
 		contentPane.add(objectEdit, BorderLayout.EAST);
-		contentPane.add(roomView, BorderLayout.CENTER);
 		
 		mainEditor.setContentPane(contentPane);
 	}
