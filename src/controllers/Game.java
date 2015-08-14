@@ -29,6 +29,16 @@ public class Game extends Thread{
 		g.start();
 	}
 	
+	public static void startGame(World world) {
+		Game g=new Game(world);
+		g.start();
+	}
+	
+	public static void startGame(String file) {
+		Game g=new Game(file);
+		g.start();
+	}
+	
 	//Controllers
 	private RoomController roomCont;
 	private MenuController menuCont;
@@ -79,6 +89,21 @@ public class Game extends Thread{
 	
 	private Game(){
 		initWorld();
+		initControllersAndLayers();
+		initGUI();
+	}
+	
+	private Game(World world){
+		this.world=world;
+		initControllersAndLayers();
+		initGUI();
+	}
+	
+	private Game(String file){
+		initWorld();
+		if(!world.load(file)){
+			//TODO error JOptionPane
+		}
 		initControllersAndLayers();
 		initGUI();
 	}
