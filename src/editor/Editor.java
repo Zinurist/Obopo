@@ -4,6 +4,7 @@ import game.World;
 import gui.Panel;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,6 +50,8 @@ public class Editor {
 	private void initGUI(){
 		mainEditor=new JFrame("Obopo World Editor");
 		mainEditor.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		
 		
 		initMenuBar();
 		initPanels();
@@ -130,10 +133,11 @@ public class Editor {
 	private void initPanels(){
 		JPanel contentPane=new JPanel(new BorderLayout());
 		
-		JTabbedPane objectSelect=new JTabbedPane();
-		JTabbedPane roomView=new JTabbedPane();
-		JTabbedPane objectEdit=new JTabbedPane();
+		JTabbedPane objectSelect=new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+		JTabbedPane roomView=new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+		JTabbedPane objectEdit=new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 		
+		//---SOUTH---
 		JPanel bottomPanel=new JPanel(new BorderLayout());
 		JPanel quickEdit=new JPanel(new GridLayout(2,3));//TODO what quick edit info?
 		JPanel controlPanel=new JPanel(new GridLayout(1,2));
@@ -146,7 +150,27 @@ public class Editor {
 
 		bottomPanel.add(controlPanel, BorderLayout.WEST);
 		bottomPanel.add(quickEdit, BorderLayout.CENTER);
-
+		//--------------
+		
+		//---WEST---
+		objectSelect.setPreferredSize(new Dimension(200,400));
+		objectSelect.addTab("Entity", null);
+		objectSelect.addTab("Tile", null);
+		//---------
+		
+		//---EAST---
+		objectEdit.setPreferredSize(new Dimension(200,400));
+		objectEdit.addTab("Entities", null);
+		objectEdit.addTab("Tiles", null);
+		objectEdit.addTab("Rooms", null);
+		//---------
+		
+		//---NORTH---
+		roomView.setPreferredSize(new Dimension(400,400));
+		roomView.addTab("room1", null);
+		roomView.addTab("room2", null);
+		//---------
+				
 		contentPane.add(bottomPanel, BorderLayout.SOUTH);
 		contentPane.add(objectSelect, BorderLayout.WEST);
 		contentPane.add(objectEdit, BorderLayout.EAST);
