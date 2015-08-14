@@ -66,7 +66,7 @@ public class Editor {
 		JMenu menuFile=new JMenu("File");
 		JMenu menuEdit=new JMenu("Edit");
 		JMenu menuHelp=new JMenu("Help");
-		JButton menuAbout=new JButton("About");
+
 
 		JMenuItem miCreate=new JMenuItem("Create new world");
 		JMenuItem miSave=new JMenuItem("Save world");
@@ -110,6 +110,7 @@ public class Editor {
 		//TODO menuEdit
 		
 		//TODO menuHelp
+		JMenuItem menuAbout=new JMenuItem("About");
 		
 		menuAbout.addActionListener(new ActionListener(){
 			@Override
@@ -118,10 +119,11 @@ public class Editor {
 			}
 		});
 		
+		menuHelp.add(menuAbout);
+		
 		menuBar.add(menuFile);
 		menuBar.add(menuEdit);
 		menuBar.add(menuHelp);
-		menuBar.add(menuAbout);
 		mainEditor.setJMenuBar(menuBar);
 	}
 	
