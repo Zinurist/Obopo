@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import controllers.Game;
-
 /**
  * A Room represents the level/part of the world, in which the player currently is and which is considered to be active, meaning all entities in this room are active.
  */
@@ -40,7 +38,7 @@ public class Room implements Serializable{
 	private Player player;
 	private int tickNr;//tickNr is needed to prevent double activation
 	
-	public Room(Game game,int id,Player player){
+	public Room(int id,Player player){
 		this.id=id;
 		background=null;
 		width=30;
@@ -88,7 +86,7 @@ public class Room implements Serializable{
 		init();
 	}
 	
-	public Room(Game game,int id,Player player, String string) {
+	public Room(int id,Player player, String string) {
 		this.id=id;
 		background=null;
 		width=30;

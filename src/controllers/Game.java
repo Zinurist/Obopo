@@ -87,7 +87,7 @@ public class Game extends Thread{
 	 * Creates the world object.
 	 */
 	private void initWorld() {
-		world=new World(this);
+		world=new World();
 	}
 	
 	/**

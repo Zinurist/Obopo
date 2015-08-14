@@ -6,8 +6,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import controllers.Game;
-
 public class World implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -26,12 +24,12 @@ public class World implements Serializable{
 		return player;
 	}
 	
-	public World(Game game){
+	public World(){
 		rooms=new HashMap<Integer,Room>();
 		
 		player=new Player(400, 300, 2);
-		rooms.put(0, new Room(game,0,player));
-		rooms.put(1, new Room(game,1,player,"Sand"));
+		rooms.put(0, new Room(0,player));
+		rooms.put(1, new Room(1,player,"Sand"));
 
 		setCurrentRoom(0);
 	}
