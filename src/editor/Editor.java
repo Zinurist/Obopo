@@ -2,7 +2,6 @@ package editor;
 
 import game.World;
 import gui.Layer;
-import gui.Panel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -15,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -25,11 +25,25 @@ import javax.swing.JTabbedPane;
 import controllers.Camera;
 
 public class Editor {
+
+	private static final String[] tiles={"Air","Beach","Gate","Grass","Mountain","Sand","Water"};//different types as object edit option
+	private static final String[] entities={"Health Potion","Key","Switch","Octopus","Player"};
+	private static final String[] events={"Animation","Camera","Entrance","Fall"};
 	
 	//GUI
 	private JFrame mainEditor;
 	private JFrame mapEditor;
 	private ArrayList<Layer> layers;
+
+	//static lists
+	private JList<String> listSelectTile;
+	private JList<String> listSelectEntity;
+	private JList<String> listSelectEvent;
+	
+	//dynamic lists, depend on current room
+	private JList<String> listEditTile;
+	private JList<String> listEditEntity;
+	private JList<String> listEditEvent;
 	
 	//Data
 	private World world;
@@ -158,16 +172,27 @@ public class Editor {
 		//---WEST---
 		objectSelect.setPreferredSize(new Dimension(200,400));
 		objectSelect.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		objectSelect.addTab("Entity", null);
-		objectSelect.addTab("Tile", null);
+		
+		listSelectEntity=new JList<String>(entities);
+		listSelectTile=new JList<String>(tiles);
+		listSelectEvent=new JList<String>(events);
+		
+		objectSelect.addTab("Tile", listSelectTile);
+		objectSelect.addTab("Entity", listSelectEntity);
+		objectSelect.addTab("Event", listSelectEvent);
 		//---------
 		
 		//---EAST---
 		objectEdit.setPreferredSize(new Dimension(200,400));
 		objectEdit.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		objectEdit.addTab("Entities", null);
-		objectEdit.addTab("Tiles", null);
-		objectEdit.addTab("Rooms", null);
+
+		listEditTile=new JList<String>();
+		listEditEntity=new JList<String>();
+		listEditEvent=new JList<String>();
+
+		objectEdit.addTab("Tiles", listEditTile);
+		objectEdit.addTab("Entities", listEditEntity);
+		objectEdit.addTab("Events", listEditEvent);
 		//---------
 		
 		//---NORTH---
@@ -175,6 +200,8 @@ public class Editor {
 		roomView.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		roomView.addTab("room1", null);
 		roomView.addTab("room2", null);
+		//TODO room changes-> update lists
+		//-> maybe add lists to the tab-component?
 		//---------
 
 		contentPane.add(roomView, BorderLayout.CENTER);
